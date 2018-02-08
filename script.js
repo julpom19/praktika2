@@ -40,7 +40,7 @@ Vue.component('rule', {
             return store.state.isRunning;
         },
         formatDate: function () {
-            return (this.rule.date) ? this.rule.date.format('DD/MM/YYYY') : '';
+            return (this.rule.date) ? this.rule.date.format('DD.MM.YYYY') : '';
         }
     },
     methods: {
@@ -88,7 +88,7 @@ let baseOfKnowledge = new Vue({
         activeIndex: 0,
 
         ruleText: '',
-        startFactsStr: 'a, b, c',
+        startFactsStr: '',
 
         rules: [],
         ruleObjects: [],
@@ -127,6 +127,7 @@ let baseOfKnowledge = new Vue({
             this.edit = true;
             this.ruleText = this.rules[store.state.ruleForEditIndex].text;
             this.modalIsVisible = true;
+            this.pickedDate = this.rules[store.state.ruleForEditIndex].date;
         }
     },
     methods: {
@@ -153,12 +154,10 @@ let baseOfKnowledge = new Vue({
                         return;
                     }
                     if(this.edit) {
-                        this.rules[store.state.ruleForEditIndex] = {
-                            text: this.ruleText,
-                            isActive: false,
-                            isSelected: false,
-                            date: date
-                        };
+                        this.rules[store.state.ruleForEditIndex].text = this.ruleText;
+                        this.rules[store.state.ruleForEditIndex].isActive = false;
+                        this.rules[store.state.ruleForEditIndex].isSelected = false;
+                        this.rules[store.state.ruleForEditIndex].date = date;
                         this.ruleObjects[store.state.ruleForEditIndex] = ruleObj;
                         this.edit = false;
                     } else {
@@ -176,6 +175,11 @@ let baseOfKnowledge = new Vue({
                     // alert('syntax error');
                 }
 
+            }
+
+            console.log('ALL RULES');
+            for(let rule of this.rules) {
+                console.log(rule);
             }
         },
         start: function () {
@@ -291,18 +295,16 @@ let baseOfKnowledge = new Vue({
         }
     },
     updated: function () {
-
         $('#reportrange').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
                 locale: {
-                    format: 'DD/MM/YYYY'
+                    format: 'DD.MM.YYYY'
                 }
             },
             function(start) {
                 baseOfKnowledge.pickedDate = start;
             });
-
     }
 
 });
