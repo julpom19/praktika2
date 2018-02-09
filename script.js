@@ -1,24 +1,3 @@
-let startRules = [
-    'if a and b and n then f',
-    'if c and k or l then p or ',
-    'if a and f and p or c then r',
-    'if d or k and l then o and e',
-    'if r and a or f then h and m',
-    'if m or d and k or o then d',
-    'if s and c then l and h',
-    'if h then e',
-    'if e and l then s',
-    'if d or p and n then p and r',
-    'if r and s or e then f',
-    'if f and e or p and r then goal',
-    'if o and l or n then k',
-    'if m or c then d',
-    'if k and a and o then goal',
-    'if s and e and r then l'
-];
-
-let useStartRules = false;
-
 
 Vue.component('rule', {
     props: ['index', 'rule'],
@@ -101,7 +80,6 @@ let baseOfKnowledge = new Vue({
         workingMemory: [],
         workingListOfRules: [],
         selectedRulesIndexes: [],
-        usedate: false,
         pickedDate: ''
     },
     computed: {
@@ -113,9 +91,6 @@ let baseOfKnowledge = new Vue({
         },
         isRunning: function () {
             return store.state.isRunning;
-        },
-        hasRules: function () {
-            return (this.rules.length > 0) ? true : false;
         }
     },
     watch: {
@@ -143,9 +118,10 @@ let baseOfKnowledge = new Vue({
 
             if(this.ruleText !== '') {
                 this.ruleText = this.ruleText.toLowerCase();
+                this.ruleText = this.ruleText.trim();
                 let tokens = getTokens(this.ruleText);
                 let isCorrect = isSyntaxCorrect(tokens);
-                let date = (this.usedate) ? this.pickedDate : '';
+                let date = this.pickedDate;
                 if(isCorrect) {
                     let ruleObj = buildRuleObj(this.ruleText);
                     let ruleObjAnt = ruleObj.antecedent;
@@ -161,6 +137,7 @@ let baseOfKnowledge = new Vue({
                         this.ruleObjects[store.state.ruleForEditIndex] = ruleObj;
                         this.edit = false;
                     } else {
+
                         this.rules.push({
                             text: this.ruleText,
                             isActive: false,
@@ -176,11 +153,6 @@ let baseOfKnowledge = new Vue({
                 }
 
             }
-
-            console.log('ALL RULES');
-            for(let rule of this.rules) {
-                console.log(rule);
-            }
         },
         start: function () {
             if(this.isRunning) {
@@ -193,10 +165,6 @@ let baseOfKnowledge = new Vue({
                 this.selectedRulesIndexes = [];
                 store.commit('unsetRunning');
                 return;
-            }
-            //если задан массив стартовых правил
-            if(useStartRules) {
-                saveRules();
             }
             //Проверяем все правила на наличие GOAL
             let goalIsPresent = false;
@@ -421,32 +389,3 @@ function isRuleNew(listOfWorkingRules, ruleIndex) {
     }
     return true;
 }
-
-function saveRules() {
-    for(let rule of startRules) {
-        rule = rule.toLowerCase();
-        let tokens = getTokens(rule);
-        let isCorrect = isSyntaxCorrect(tokens);
-        if(isCorrect) {
-            let ruleObj = buildRuleObj(rule);
-            let ruleObjAnt = ruleObj.antecedent;
-            if(checkForGoal(ruleObjAnt)) {
-                alert('У антецеденті НЕ МОЖЕ бути присутня ціль (goal)');
-                return;
-            }
-            baseOfKnowledge.rules.push({
-                text: rule,
-                isActive: false,
-                isSelected: false
-            });
-            baseOfKnowledge.ruleObjects.push(ruleObj);
-
-        }
-    }
-
-}
-
-
-
-
-

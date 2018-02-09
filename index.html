@@ -74,8 +74,8 @@
                                     <option>Останнє правило</option>
                                     <option>Спрощення</option>
                                     <option>Ускладнення</option>
-                                    <option v-if="usedate">LEX</option>
-                                    <option v-if="usedate">MEA</option>
+                                    <option>LEX</option>
+                                    <option>MEA</option>
                                 </select>
                             </td>
                         </tr>
@@ -87,12 +87,6 @@
                                     <option>Глибина</option>
                                     <option>Випадково</option>
                                 </select>
-                            </td>
-                        </tr>
-                        <tr v-if="!hasRules">
-                            <td><span>Використовувати дату</span></td>
-                            <td>
-                                <input type="checkbox" v-model="usedate" id="usedatecb">
                             </td>
                         </tr>
                     </table>
@@ -109,17 +103,12 @@
                 <div class="new_rule_wrapper">
                     <h3>Визначте правило</h3>
                     <input type="text" v-model="ruleText" @keyup.enter="saveRule" autofocus>
-                    <h4 v-if="usedate">Оберіть дату</h4>
-                    <input v-if="usedate" type="text" id="reportrange" />
-                    <!--<div  class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">-->
-                        <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;-->
-                        <!--<span></span> <b class="caret"></b>-->
-                    <!--</div>-->
+                    <h4>Оберіть дату</h4>
+                    <input type="text" id="reportrange" />
                     <div>
                         <button class="btn btn-outline-primary" @click="cancelModal">Назад</button>
                         <button class="btn btn-outline-primary" @click="saveRule">Зберегти</button>
                     </div>
-
                 </div>
             </div>
         </div>
